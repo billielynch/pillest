@@ -2,7 +2,7 @@ import random
 
 from PIL import Image
 
-from . import vectors, images, colours, maths
+from . import vectors, images, colours, maths, output
 
 
 def add_ball(image, centre, inner_radius, fade_distance, inverted, colour):
@@ -21,7 +21,10 @@ def add_ball(image, centre, inner_radius, fade_distance, inverted, colour):
             pixel_loc = (x, y)
 
             distance_from_centre = vectors.vector_magnitude(pixel_loc, centre)
-            restricted_distance = maths.restrict_value(codomain=(inner_radius, outer_radius), number=distance_from_centre)
+            restricted_distance = maths.restrict_value(
+                codomain=(inner_radius, outer_radius),
+                number=distance_from_centre
+            )
             fade_progress = restricted_distance - inner_radius
 
             ratio = fade_progress/fade_distance
@@ -34,59 +37,103 @@ def add_ball(image, centre, inner_radius, fade_distance, inverted, colour):
     return image
 
 
-def make_ball_image(image_size, number_of_dots, centre_range, fade_range, palette, mode):
+def make_random_ball_image(image_size, number_of_dots, centre_range, fade_range, palette, mode):
 
-    size = (image_size, image_size)
-    minimum_centre_radius, maximum_centre_radius = centre_range
-    minimum_fade_distance, maximum_fade_distance = fade_range
-
-    image = Image.new(mode, size)
-
+    image = Image.new(mode, image_size)
     for colour in random.choices(palette, k=number_of_dots):
-        inner_radius = random.randint(minimum_centre_radius, maximum_centre_radius)
-        fade_distance = random.randint(minimum_fade_distance, maximum_fade_distance)
-        centre = (random.randint(0, image_size), random.randint(0, image_size))
-
+        centre, inner_radius, fade_distance = random_ball(image.size, centre_range, fade_range)
         image = add_ball(image, centre, inner_radius, fade_distance, False, colour)
 
     return image
+
+
+def random_ball(size, centre_range, fade_range, colour_generator=None):
+
+    height, width = size
+    minimum_centre_radius, maximum_centre_radius = centre_range
+    minimum_fade_distance, maximum_fade_distance = fade_range
+
+    centre = (random.randint(0, height), random.randint(0, width))
+    inner_radius = random.randint(minimum_centre_radius, maximum_centre_radius)
+    fade_distance = random.randint(minimum_fade_distance, maximum_fade_distance)
+
+    if colour_generator:
+        return centre, inner_radius, fade_distance, colour_generator()
+    else:
+        return centre, inner_radius, fade_distance
 
 
 def reduce_palette(image, palette_size):
     return apply_pallete(image, palette_size, image)
 
 
-def apply_pallete(palette_image, colours, image):
-    converted_palette_image = palette_image.quantize(colors=colours)
+def apply_pallete(palette_image, palette, image):
+    converted_palette_image = palette_image.quantize(colors=palette)
     return image.quantize(palette=converted_palette_image)
 
 
-def greyscale_balls(image_size, number_of_dots, centre_range, fade_range, palette):
-    mode = 'L'
-    return make_ball_image(image_size, number_of_dots, centre_range, fade_range, palette, mode)
+def greyscale_balls(**kwargs):
+    return make_random_ball_image(
+        mode='L',
+        **kwargs
+    )
 
 
-def colour_balls(image_size, number_of_dots, centre_range, fade_range, palette):
-    mode = 'RGB'
-    return make_ball_image(image_size, number_of_dots, centre_range, fade_range, palette, mode)
+def randomcolour_balls(**kwargs):
+    return make_random_ball_image(
+        mode='RGB',
+        **kwargs
+    )
 
 
-def white_balls(image_size, number_of_dots, centre_range, fade_range):
+def white_balls(**kwargs):
     palette = [colours.MAX_COLOUR]
-    return greyscale_balls(image_size, number_of_dots, centre_range, fade_range, palette)
+    return greyscale_balls(
+        palette=palette,
+        **kwargs
+    )
 
 
-def random_colour_balls(image_size, number_of_dots, centre_range, fade_range, num_colours=200):
-    palette = [colours.random_rgb() for _ in range(0, num_colours)]
-    return greyscale_balls(image_size, number_of_dots, centre_range, fade_range, palette)
+def draw_balls(image, ball_details):
+
+    updated_balls = list()
+
+    for location, centre, fade, colour in ball_details:
+        add_ball(image, location, centre, fade, False, colour)
+
+        if centre:
+            centre = centre - 1
+
+        if fade:
+            fade = fade - 1
+
+        if centre + fade > 0:
+            updated_balls.append(
+                (location, centre, fade, colour)
+            )
+
+    return updated_balls
 
 
-def image_pallete_balls(image_size, number_of_dots, centre_range, fade_range, image_file):
-    image = Image.open(image_file)
-    palette = [colour for _, colour in image.getcolors(maxcolors=10000000)]
-    colour_balls(image_size, number_of_dots, centre_range, fade_range, palette).show()
+def fading_balls_image():
+
+    size = (500, 500)
+    ball_details = []
+    centre_range = (0, 10)
+    fade_range = (10, 80)
+
+    for _ in range(0, 1000):
+
+        image = Image.new('RGB', size)
+        new_ball = random.choice([True, True, False])
+
+        if new_ball:
+            details = random_ball(size, centre_range, fade_range, colour_generator=colours.random_rgb)
+            ball_details.append(details)
+
+        ball_details = draw_balls(image, ball_details)
+        output.save(image, display=False)
 
 
 if __name__ == '__main__':
-
-    image_pallete_balls(1000, 100, (0,10), (5,30), 'pillest/files/galaxy.jpg')
+    fading_balls_image()

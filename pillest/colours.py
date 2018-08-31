@@ -1,15 +1,16 @@
+import logging
 import random
 
-from . import maths
+from . import maths, PillestError
 
 
 MIN_COLOUR = 0
 MAX_COLOUR = 255
-COLOUR_CODOMAIN=(MIN_COLOUR, MAX_COLOUR)
+COLOUR_CODOMAIN = (MIN_COLOUR, MAX_COLOUR)
 
 
-def scale_colour(value, max_value):
-    return int(value/max_value*MAX_COLOUR)
+class ColourError(PillestError):
+    pass
 
 
 def random_saturation():
@@ -22,6 +23,20 @@ def random_rgb():
         random_saturation(),
         random_saturation()
     )
+
+
+def random_palette(number_colours, mode=None, colour_generator=None):
+
+    if mode and colour_generator:
+        logging.warning("mode will be ignored")
+
+    if not colour_generator:
+        if mode in ['RGB', None]:
+            colour_generator = random_rgb
+        elif mode == 'L':
+            colour_generator = random_saturation
+
+    return [colour_generator() for _ in range(0, number_colours)]
 
 
 def adjust_saturation(ratio: int, colour=None):
