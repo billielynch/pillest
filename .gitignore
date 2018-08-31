@@ -2,3 +2,6 @@
 .idea/*
 **/__pycache__/*
 **.pyc
+.coverage
+**/.pytest_cache/
+**/boop.egg-info/
