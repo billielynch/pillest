@@ -1,5 +1,6 @@
-from distutils.core import setup
 import os
+from distutils.core import setup
+
 
 PROJECT_DIR = os.path.dirname(__file__)
 
@@ -16,4 +17,3 @@ setup(
     packages=['boop'],
     install_requires=open(os.path.join(PROJECT_DIR, "requirements.txt")).read(),
 )
-

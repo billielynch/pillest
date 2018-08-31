@@ -1,3 +1,3 @@
 
-class PillestError(Exception):
+class BoopError(Exception):
     pass

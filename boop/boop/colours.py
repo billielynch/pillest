@@ -1,17 +1,14 @@
 import logging
 import random
 
-import PillestError
-
-from boop import maths
+from boop import BoopError, maths
 
 
 MIN_COLOUR = 0
 MAX_COLOUR = 255
-COLOUR_CODOMAIN = (MIN_COLOUR, MAX_COLOUR)
 
 
-class ColourError(PillestError):
+class ColourError(BoopError):
     pass
 
 
@@ -52,7 +49,7 @@ def add_colours(c1, c2):
     try:
         assert len(c1) == len(c2)
     except TypeError:
-        return maths.restrict_value(COLOUR_CODOMAIN, c1 + c2)
+        return maths.clip(c1 + c2, max=MAX_COLOUR, min=MIN_COLOUR)
     else:
         colour_sum = (s1 + s2 for s1, s2 in zip(c1, c2))
-        return tuple(maths.restrict_value(COLOUR_CODOMAIN, value) for value in colour_sum)
+        return tuple(maths.clip(value, max=MAX_COLOUR, min=MIN_COLOUR) for value in colour_sum)

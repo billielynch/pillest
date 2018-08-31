@@ -1,30 +1,34 @@
 import random
 
 from PIL import Image
+import numpy
 
-from boop import colours, images, maths, output, vectors
+from boop import colours, images, output, maths
 
 
 def add_ball(image, centre, inner_radius, fade_distance, inverted, colour):
     outer_radius = fade_distance + inner_radius
     x_max, y_max = image.size
-    x_centre, y_centre = centre
 
-    y_min = maths.value_or_more(0, y_centre - outer_radius)
-    y_max = maths.value_or_less(y_max, y_centre + outer_radius)
+    top_left_corner = numpy.subtract(centre, outer_radius)
+    corrected_top_left_corner = maths.clip(top_left_corner, min=0)
 
-    x_min = maths.value_or_more(0, x_centre - outer_radius)
-    x_max = maths.value_or_less(x_max, x_centre + outer_radius)
+    bottom_right_corner = numpy.add(centre, outer_radius)
+    corrected_bottom_right_corner = maths.clip(bottom_right_corner, max=[x_max, y_max])
 
-    for y in range(y_min, y_max):
-        for x in range(x_min, x_max):
+    for y in range(corrected_top_left_corner.item(1), corrected_bottom_right_corner.item(1)):
+        for x in range(corrected_top_left_corner.item(0), corrected_bottom_right_corner.item(0)):
             pixel_loc = (x, y)
 
-            distance_from_centre = vectors.vector_magnitude(pixel_loc, centre)
-            restricted_distance = maths.restrict_value(
-                codomain=(inner_radius, outer_radius),
-                number=distance_from_centre
+            vector = numpy.subtract(pixel_loc, centre)
+            distance_from_centre = int(numpy.linalg.norm(vector))
+
+            restricted_distance = maths.clip(
+                distance_from_centre,
+                min=inner_radius,
+                max=outer_radius
             )
+
             fade_progress = restricted_distance - inner_radius
 
             ratio = fade_progress / fade_distance
@@ -117,12 +121,12 @@ def draw_balls(image, ball_details):
 
 def fading_balls_image():
 
-    size = (500, 500)
+    size = (100, 100)
     ball_details = []
     centre_range = (0, 10)
-    fade_range = (10, 80)
+    fade_range = (10, 20)
 
-    for _ in range(0, 1000):
+    for _ in range(0, 100):
 
         image = Image.new('RGB', size)
         new_ball = random.choice([True, True, False])
@@ -136,4 +140,7 @@ def fading_balls_image():
 
 
 if __name__ == '__main__':
-    fading_balls_image()
+    try:
+        fading_balls_image()
+    except Exception():
+        import ipdb; ipdb.set_trace()
