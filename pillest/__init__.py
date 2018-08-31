@@ -1,4 +1,0 @@
-
-
-class PillestError(Exception):
-    pass
