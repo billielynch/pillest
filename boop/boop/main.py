@@ -1,9 +1,9 @@
 import random
 
-from PIL import Image
 import numpy
+from PIL import Image
 
-from boop import colours, images, output, maths
+from boop import colours, images, maths, output
 
 
 def add_ball(image, centre, inner_radius, fade_distance, inverted, colour):
@@ -140,7 +140,4 @@ def fading_balls_image():
 
 
 if __name__ == '__main__':
-    try:
-        fading_balls_image()
-    except Exception():
-        import ipdb; ipdb.set_trace()
+    fading_balls_image()

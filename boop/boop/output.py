@@ -2,8 +2,7 @@ from datetime import datetime
 from os import environ, path
 from subprocess import call
 
-
-IMAGES_DIR = 'IMAGES_DIR'
+from boop import IMAGES_DIR
 
 
 class OutputError(Exception):
@@ -28,7 +27,7 @@ def root_path():
     env_var_value = environ.get(IMAGES_DIR, None)
 
     if not env_var_value:
-        raise OutputError('Please set the \'IMAGES_DIR\' environment variable')
+        raise OutputError(f"Please set the '{IMAGES_DIR}' environment variable")
 
     absolute_path = path.abspath(env_var_value)
     return absolute_path
@@ -51,5 +50,5 @@ def save_path(image_format, counter=None):
         return filepath
 
 
-def show(path):
-    call(["eog", path])
+def show(filepath):
+    call(["eog", filepath])
