@@ -19,24 +19,24 @@ def random_saturation() -> int:
 
 
 def random_rgb() -> Tuple[int, int, int]:
-    return (
-        random_saturation(),
-        random_saturation(),
-        random_saturation()
-    )
+    return (random_saturation(), random_saturation(), random_saturation())
 
 
 def random_palette(number_of_colours: int, mode=None):
 
     if number_of_colours < 1:
-        raise ColourError(f"Can only generate a positive number of colours not {number_of_colours}")
+        raise ColourError(
+            f"Can only generate a positive number of colours not {number_of_colours}"
+        )
 
     if number_of_colours == 1:
-        logger.warning('try using a colour generator method if you want a single colour')
+        logger.warning(
+            "try using a colour generator method if you want a single colour"
+        )
 
-    if mode == 'RGB':
+    if mode == "RGB":
         colour_generator = random_rgb
-    elif mode == 'L':
+    elif mode == "L":
         colour_generator = random_saturation
     else:
         colour_generator = random_rgb

@@ -3,6 +3,7 @@ mypy
 mock
 numpy
 Pillow
+pip-tools
 pytest
 pytest-cov
 pytest-flake8

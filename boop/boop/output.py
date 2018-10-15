@@ -10,8 +10,8 @@ class OutputError(Exception):
 
 
 class PNGFormat(object):
-    driver = 'PNG'
-    extension = '.png'
+    driver = "PNG"
+    extension = ".png"
 
 
 def save(image, display=True):
@@ -41,7 +41,7 @@ def save_path(image_format, counter=None):
     directory = root_path()
 
     iso_date = datetime.today().isoformat()
-    filename = iso_date + '_' + str(counter) + image_format.extension
+    filename = iso_date + "_" + str(counter) + image_format.extension
     filepath = path.join(directory, filename)
 
     if path.exists(filepath):
