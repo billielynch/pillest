@@ -77,7 +77,7 @@ def test_random_palette_default_generator_zero_colours_expected_result():
         colours.random_palette(0)
 
 
-@mock.patch("boop.colours.random_rgb", autospec=True)
+@mock.patch("boop.colours.DEFAULT_COLOUR_GENERATOR", autospec=True)
 def test_random_palette_default_generator_with_one_colour_called_once(mocked_method):
     colours.random_palette(1)
     mocked_method.assert_called_once_with()
@@ -87,7 +87,7 @@ def test_random_palette_default_generator_with_one_colour_expected_result():
     assert len(colours.random_palette(1)) == 1
 
 
-@mock.patch("boop.colours.random_rgb", autospec=True)
+@mock.patch("boop.colours.DEFAULT_COLOUR_GENERATOR", autospec=True)
 def test_random_palette_default_generator_many_colours_called_that_many_times(
     mocked_method
 ):

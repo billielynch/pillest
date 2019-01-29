@@ -22,6 +22,9 @@ def random_rgb() -> Tuple[int, int, int]:
     return (random_saturation(), random_saturation(), random_saturation())
 
 
+DEFAULT_COLOUR_GENERATOR = random_rgb
+
+
 def random_palette(number_of_colours: int, mode=None):
 
     if number_of_colours < 1:
@@ -39,7 +42,10 @@ def random_palette(number_of_colours: int, mode=None):
     elif mode == "L":
         colour_generator = random_saturation
     else:
-        colour_generator = random_rgb
+        if mode:
+            logger.warning(f"'{mode}' is not a valid colour mode")
+        logger.debug("Using default colour generator")
+        colour_generator = DEFAULT_COLOUR_GENERATOR
 
     return [colour_generator() for _ in range(0, number_of_colours)]
 
