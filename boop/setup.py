@@ -1,7 +1,6 @@
 import os
 from distutils.core import setup
 
-
 PROJECT_DIR = os.path.dirname(__file__)
 
 if PROJECT_DIR:

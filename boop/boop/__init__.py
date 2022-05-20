@@ -1,7 +1,6 @@
 import logging
 from os import environ
 
-
 IMAGES_DIR = "BOOP_IMAGES_DIR"
 DEBUG = "BOOP_DEBUG"
 

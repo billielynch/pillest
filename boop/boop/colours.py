@@ -5,7 +5,6 @@ import numpy
 
 from boop import BoopError, logger, maths
 
-
 MIN_COLOUR = 0
 MAX_COLOUR = 255
 

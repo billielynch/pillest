@@ -6,7 +6,7 @@ update-requirements:
 	pip-compile --upgrade --output-file boop/requirements.txt requirements.in
 
 format:
-	isort -y
+	isort .
 	black .
 
 test:

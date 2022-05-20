@@ -89,7 +89,7 @@ def test_random_palette_default_generator_with_one_colour_expected_result():
 
 @mock.patch("boop.colours.random_rgb", autospec=True)
 def test_random_palette_default_generator_many_colours_called_that_many_times(
-    mocked_method
+    mocked_method,
 ):
     colours.random_palette(100)
     expected_call = 100
