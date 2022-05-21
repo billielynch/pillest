@@ -1,5 +1,7 @@
+import logging
 import random
 
+import click
 import numpy
 from PIL import Image
 
@@ -35,6 +37,9 @@ def add_ball(image, centre, inner_radius, fade_distance, inverted, colour):
 
             ratio = fade_progress / fade_distance
             ratio = 1 - ratio if not inverted else ratio
+            logging.warning(
+                ratio
+            )  # this turns into Nan for some reason I can't find yet
             adjusted_colour = colours.adjust_saturation(ratio, colour)
             current_colour = images.get_pixel(image, pixel_loc)
             colour_value = colours.add_colours(adjusted_colour, current_colour)
@@ -114,14 +119,16 @@ def draw_balls(image, ball_details):
     return updated_balls
 
 
-def fading_balls_image():
+def fading_balls_images(image_set_name):
 
-    size = (100, 100)
+    dirpath = output.make_image_set_path(image_set_name=image_set_name)
+
+    size = (500, 500)
     ball_details = []
-    centre_range = (0, 10)
-    fade_range = (10, 20)
+    centre_range = (0, 20)
+    fade_range = (10, 30)
 
-    for _ in range(0, 100):
+    for count in range(0, 100):
 
         image = Image.new("RGB", size)
         new_ball = random.choice([True, True, False])
@@ -133,8 +140,17 @@ def fading_balls_image():
             ball_details.append(details)
 
         ball_details = draw_balls(image, ball_details)
-        output.save(image, display=False)
+        output.save(
+            image, display=False, filename=f"fadingballs{count}", directory_path=dirpath
+        )
+
+
+@click.command()
+@click.option("-i", "--imageset", help="directory name for the image set.")
+def main(imageset):
+    assert imageset, "you need to give an image set name"
+    fading_balls_images(image_set_name=imageset)
 
 
 if __name__ == "__main__":
-    fading_balls_image()
+    main()

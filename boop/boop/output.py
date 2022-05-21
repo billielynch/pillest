@@ -1,4 +1,5 @@
-from datetime import datetime
+import logging
+import os
 from os import environ, path
 from subprocess import call
 
@@ -14,40 +15,50 @@ class PNGFormat(object):
     extension = ".png"
 
 
-def save(image, display=True):
+def save(image, filename, directory_path, display=True):
+    """_summary_
 
-    absfile_path = save_path(image_format=PNGFormat)
-    image.save(absfile_path, PNGFormat.driver)
+    Args:
+        image (_type_): the Image
+        filename (_type_): string for filename
+        image_set_name (_type_): string for the image set name
+        display (bool, optional): whether to open the image on save. Defaults to True. #TODO: this should not be here
+    """
+    FORMAT = PNGFormat
+
+    filepath = path.join(directory_path, filename + FORMAT.extension)
+    image.save(filepath, FORMAT.driver)
 
     if display:
-        show(absfile_path)
+        show(filepath)
 
 
-def root_path():
+def get_root_path():
     env_var_value = environ.get(IMAGES_DIR, None)
 
     if not env_var_value:
-        raise OutputError(f"Please set the '{IMAGES_DIR}' environment variable")
+        import pdb
+
+        pdb.set_trace()
+        raise OutputError(
+            f"Please set the '{IMAGES_DIR}' environment variable, current it is '{env_var_value}'"
+        )
 
     absolute_path = path.abspath(env_var_value)
     return absolute_path
 
 
-def save_path(image_format, counter=None):
+def make_image_set_path(image_set_name):
 
-    if counter is None:
-        counter = 0
+    root_directory = get_root_path()
+    directory_path = path.join(root_directory, image_set_name)
 
-    directory = root_path()
-
-    iso_date = datetime.today().isoformat()
-    filename = iso_date + "_" + str(counter) + image_format.extension
-    filepath = path.join(directory, filename)
-
-    if path.exists(filepath):
-        return save_path(image_format=image_format, counter=counter)
+    if path.exists(directory_path):
+        logging.warning(f"'{directory_path}' already exists, this might get messy")
     else:
-        return filepath
+        os.mkdir(directory_path)
+
+    return directory_path
 
 
 def show(filepath):
