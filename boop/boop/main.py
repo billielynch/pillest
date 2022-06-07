@@ -156,19 +156,19 @@ def fading_balls_images(dirpath):
 
     logging.info("generating a coloured fading ball image set")
 
-    frames = 100
-    image_size = (100, 400)
+    frames = 500
+    image_size = (500, 500)
     logging.debug(f"image size: {image_size}")
     solid_colour_radius_choice_range = (10, 50)
-    fade_radius_choice_range = (10, 50)
+    fade_radius_choice_range = (30, 120)
 
     list_of_balls = []
     images = []
 
-    for _ in range(0, frames):
-
+    for count in range(0, frames):
+        logging.info(f'generating frame {count} of {frames}')
         image = Image.new("RGB", image_size)
-        new_ball = random.choice([True, True, False])
+        new_ball = random.choice([True, True, False, False, False])
 
         if new_ball:
             ball_details = random_ball(
@@ -200,7 +200,7 @@ def main(dirname, debug):
 
     log_level = logging.DEBUG if debug else logging.INFO
     logging.basicConfig(
-        format="%(asctime)s (%(levelname)s): %(message)s", level=log_level
+        format="%(asctime)s (%(levelname)s)\t: %(message)s", level=log_level
     )
 
     logging.debug(f"passed `{dirname}` as dirname")
