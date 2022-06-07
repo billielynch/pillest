@@ -24,6 +24,7 @@ def save(image, filename, directory_path, display=True):
         image_set_name (_type_): string for the image set name
         display (bool, optional): whether to open the image on save. Defaults to True. #TODO: this should not be here
     """
+
     FORMAT = PNGFormat
 
     filepath = path.join(directory_path, filename + FORMAT.extension)
@@ -55,6 +56,9 @@ def make_image_set_path(image_set_name):
 
     if path.exists(directory_path):
         logging.warning(f"'{directory_path}' already exists, this might get messy")
+        input_given = input("type nothing to bail:")
+        if input_given == "":
+            return None
     else:
         os.mkdir(directory_path)
 

@@ -14,28 +14,47 @@ class ColourError(BoopError):
 
 
 def random_saturation() -> int:
+    """
+        Returns an even distribution of (0,255) which
+        is intended to be used to generate the RGB
+
+    Returns:
+        int: a random number (0, 255)
+    """
     return random.randint(MIN_COLOUR, MAX_COLOUR)
 
 
 def random_rgb() -> Tuple[int, int, int]:
+    """
+        Returns a tuple that can be used as a single colour
+
+    Returns:
+        Tuple[int, int, int]: a thruple of ints of (0,255)
+    """
     return (random_saturation(), random_saturation(), random_saturation())
 
 
-def random_palette(number_of_colours: int, mode=None):
+def random_palette(number_of_colours: int, mode="RGB"):
+    """
+        Creates a list of colours in the prefered mode
+
+    Args:
+        number_of_colours (int): how many colours you want
+        mode (_type_, optional): _description_. Defaults to RGB, can also do black/white if given 'L'.
+
+    Returns:
+        _type_:
+    """
 
     if number_of_colours < 1:
-        raise ColourError(
-            f"Can only generate a positive number of colours not {number_of_colours}"
-        )
+        logger.error("you probably shouldnt call this if you want 0 colours")
 
     if number_of_colours == 1:
         logger.warning(
             "try using a colour generator method if you want a single colour"
         )
 
-    if mode == "RGB":
-        colour_generator = random_rgb
-    elif mode == "L":
+    if mode == "L":
         colour_generator = random_saturation
     else:
         colour_generator = random_rgb

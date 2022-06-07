@@ -1,4 +1,4 @@
-import logging
+import math
 import random
 
 import click
@@ -35,11 +35,20 @@ def add_ball(image, centre, inner_radius, fade_distance, inverted, colour):
 
             fade_progress = restricted_distance - inner_radius
 
-            ratio = fade_progress / fade_distance
+            if fade_distance < 0:
+                raise ValueError(
+                    "we cannot use negative numbers"
+                    f" for fade distance (`{fade_distance}`)"
+                )
+
+            if (
+                fade_distance == 0
+            ):  # this is causing the funny squares, need to think about them
+                ratio = 0
+            else:
+                ratio = fade_progress / fade_distance
+
             ratio = 1 - ratio if not inverted else ratio
-            logging.warning(
-                ratio
-            )  # this turns into Nan for some reason I can't find yet
             adjusted_colour = colours.adjust_saturation(ratio, colour)
             current_colour = images.get_pixel(image, pixel_loc)
             colour_value = colours.add_colours(adjusted_colour, current_colour)
@@ -100,7 +109,7 @@ def white_balls(**kwargs):
     return greyscale_balls(palette=palette, **kwargs)
 
 
-def draw_balls(image, ball_details):
+def draw_and_update_balls(image, ball_details):
 
     updated_balls = list()
 
@@ -110,23 +119,21 @@ def draw_balls(image, ball_details):
         if centre:
             centre = centre - 1
 
-        if fade:
+        if fade != 1:
             fade = fade - 1
 
-        if centre + fade > 0:
+        if centre + fade > 1:
             updated_balls.append((location, centre, fade, colour))
 
     return updated_balls
 
 
-def fading_balls_images(image_set_name):
+def fading_balls_images(dirpath):
 
-    dirpath = output.make_image_set_path(image_set_name=image_set_name)
-
-    size = (500, 500)
+    size = (100, 100)
     ball_details = []
     centre_range = (0, 20)
-    fade_range = (10, 30)
+    fade_range = (0, 20)  # I get funny squares when centre range and fade range overlap
 
     for count in range(0, 100):
 
@@ -139,7 +146,7 @@ def fading_balls_images(image_set_name):
             )
             ball_details.append(details)
 
-        ball_details = draw_balls(image, ball_details)
+        ball_details = draw_and_update_balls(image, ball_details)
         output.save(
             image, display=False, filename=f"fadingballs{count}", directory_path=dirpath
         )
@@ -149,7 +156,12 @@ def fading_balls_images(image_set_name):
 @click.option("-i", "--imageset", help="directory name for the image set.")
 def main(imageset):
     assert imageset, "you need to give an image set name"
-    fading_balls_images(image_set_name=imageset)
+
+    dirpath = output.make_image_set_path(image_set_name=imageset)
+    if not dirpath:
+        return 0
+
+    fading_balls_images(dirpath)
 
 
 if __name__ == "__main__":
