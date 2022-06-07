@@ -12,3 +12,6 @@ format:
 test:
 	pytest -vvv
 	mypy --ignore-missing-imports --strict-optional boop
+
+run:
+	python boop/boop/main.py

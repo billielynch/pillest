@@ -166,7 +166,7 @@ def fading_balls_images(dirpath):
     images = []
 
     for count in range(0, frames):
-        logging.info(f'generating frame {count} of {frames}')
+        logging.info(f"generating frame {count} of {frames}")
         image = Image.new("RGB", image_size)
         new_ball = random.choice([True, True, False, False, False])
 
@@ -200,7 +200,7 @@ def main(dirname, debug):
 
     log_level = logging.DEBUG if debug else logging.INFO
     logging.basicConfig(
-        format="%(asctime)s (%(levelname)s)\t: %(message)s", level=log_level
+        format="%(asctime)s %(levelname)8s: %(message)s", level=log_level
     )
 
     logging.debug(f"passed `{dirname}` as dirname")
@@ -213,7 +213,7 @@ def main(dirname, debug):
     if not dirpath:
         logging.debug("bailing due to no dirpath")
         return 0
-
+    
     images = fading_balls_images(dirpath)
 
     image_counter = 0

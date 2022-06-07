@@ -10,9 +10,7 @@ setup(
     name="boop",
     version="0.1.0",
     description="Image Manipulation and Generation",
-    long_description=open(os.path.join(PROJECT_DIR, "README.md")).read(),
-    author="Sarah Lynch",
-    author_email="sarahlynch@fastmail.com",
+    author="Billie Lynch",
     packages=["boop"],
     install_requires=open(os.path.join(PROJECT_DIR, "requirements.txt")).read(),
 )
