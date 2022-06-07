@@ -29,6 +29,7 @@ def save(image, filename, directory_path, display=True):
 
     filepath = path.join(directory_path, filename + FORMAT.extension)
     image.save(filepath, FORMAT.driver)
+    logging.debug(f"saved image to {filepath}")
 
     if display:
         show(filepath)
@@ -38,14 +39,12 @@ def get_root_path():
     env_var_value = environ.get(IMAGES_DIR, None)
 
     if not env_var_value:
-        import pdb
-
-        pdb.set_trace()
         raise OutputError(
             f"Please set the '{IMAGES_DIR}' environment variable, current it is '{env_var_value}'"
         )
 
     absolute_path = path.abspath(env_var_value)
+    logging.debug(f"found root path as: {absolute_path}")
     return absolute_path
 
 
@@ -61,6 +60,7 @@ def make_image_set_path(image_set_name):
             return None
     else:
         os.mkdir(directory_path)
+        logging.info(f"created {directory_path}")
 
     return directory_path
 
