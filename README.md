@@ -6,7 +6,7 @@ videos by inserting randomness into image generation.
 This library uses python 3.10.4
 
 The library uses:
-* pip-tools to manage dependencies
-* pytest and associated plugins to run tests
+* pip-tools to manage dependencies, via invoke
+* pytest and associated plugins to run tests, via invoke
 * Pillow as its main image library
-* Makefile as a operational assistant
+* Invoke as a operational assistant, use `invoke --list` for options

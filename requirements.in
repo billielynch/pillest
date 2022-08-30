@@ -1,4 +1,5 @@
 black
+invoke
 mypy
 mock
 numpy
