@@ -1,0 +1,24 @@
+Okay so this thing takes way too long.
+
+Im pretty sure I have profiled it at some point (for where things spend  
+the most time) and Im pretty sure its numpy matrix ops.
+
+I think the reason I took out the saving from the generating was to start 
+making the image that I can image.save() vs the data a separate thing.
+
+>>> I need to go through a check the profile again I think. <<<
+>>>>>>> do this and commit the code and save the results and the commit also.
+
+I also want to know if I can represent the image as a numpy array. 
+I think I should be able to by making a 3d vector elements (colour) 
+in a 2d matrix (picture). 
+
+I think I am using some matrix operations to make the circle or something?
+I htink this is one of the places that is taking a lot of time.
+
+I am not sure if I should assume that numpy is doing the thing the fastest
+As it might be a very very efficient way to make a data structure that can do
+all of the matrix ops but really I just want one. 
+
+Do I want to sell my future option of using some of those cool m ops
+for efficiency now?
