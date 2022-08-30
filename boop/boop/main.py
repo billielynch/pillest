@@ -152,12 +152,13 @@ def shrink_balls_alt(ball_details):
     return updated_balls
 
 
-def fading_balls_images(dirpath):
+def fading_balls_images(frames, width, height):
 
     logging.info("generating a coloured fading ball image set")
+    if frames is None:
+        frames = 100
 
-    frames = 500
-    image_size = (500, 500)
+    image_size = (width, height)
     logging.debug(f"image size: {image_size}")
     solid_colour_radius_choice_range = (10, 50)
     fade_radius_choice_range = (30, 120)
@@ -188,7 +189,10 @@ def fading_balls_images(dirpath):
 
 
 @click.command()
-@click.option("-d", "--dirname", help="directory name for the image set.")
+@click.option("-d", "--dirname", help="Directory name for the image set")
+@click.option("-f", "--frames", default=100, help="Frames to generate")
+@click.option("-x", "--width", default=100, help="Frame width in pixels")
+@click.option("-y", "--height", default=100, help="Frame height in pixels")
 @click.option(
     "--debug",
     is_flag=True,
@@ -196,7 +200,7 @@ def fading_balls_images(dirpath):
     default=False,
     help="Use to show debug logging",
 )
-def main(dirname, debug):
+def main(dirname, frames, width, height, debug):
 
     log_level = logging.DEBUG if debug else logging.INFO
     logging.basicConfig(
@@ -213,8 +217,8 @@ def main(dirname, debug):
     if not dirpath:
         logging.debug("bailing due to no dirpath")
         return 0
-    
-    images = fading_balls_images(dirpath)
+
+    images = fading_balls_images(frames=frames, width=width, height=height)
 
     image_counter = 0
     for image in images:
