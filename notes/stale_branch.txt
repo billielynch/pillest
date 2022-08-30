@@ -1,0 +1,2 @@
+also there is a wacko stale branch here that maybe I want to rescue some things from 
+https://github.com/billielynch/pillest/compare/master...x1
